@@ -1,6 +1,10 @@
 #include "constants.h"
 #include "Spectrogram.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include <portaudio.h>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -60,6 +64,27 @@ int main() {
     unsigned char colour[3] = {0, 0, 0};
 
     while (true) {
-        
+        Pa_ReadStream(stream, clip_fill_in_position, STEP_SIZE);
+
+        for (j = 0; j < WINDOW_WIDTH; ++j) {
+            int data_length = spectrogram_length * 2;
+            double * data = spectrogram->time_domain;
+            memset(data, 0, data_length * sizeof(double));
+
+            int start = ( j * WINDOW_SIZE ) / WINDOW_WIDTH - spectrogram_length;
+            if (start >= 0) {
+                int copy_length = 0;
+                if (start + data_length > WINDOW_SIZE)
+                    copy_length = WINDOW_SIZE - start;
+                else
+                    copy_length = data_length;
+                memcpy(data, clip + start, copy_length * sizeof(float));
+            } else {
+                start *= -1;
+                data += start;
+                data_length -= start;
+                memcpy(data, clip, data_length * sizeof(float));
+            }
+        }
     }
 }
