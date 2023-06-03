@@ -1,5 +1,4 @@
-#ifndef SPECTROGRAM_H
-#define SPECTROGRAM_H
+#pragma once
 
 #include <fftw3.h>
 
@@ -18,5 +17,3 @@ typedef struct {
 Spectrogram * intialize( int length );
 void destroy( Spectrogram *spectrogram );
 double get_magnitude( Spectrogram *spectrogram );
-
-#endif
