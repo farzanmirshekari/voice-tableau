@@ -40,10 +40,6 @@ int main() {
         return 1;
     }
 
-    if (RESERVE_SIZE < 0) {
-        return 1;
-    }
-
     int length = SPECTROGRAM_HEIGHT * (SAMPLE_RATE / 20 / SPECTROGRAM_HEIGHT + 1);
     Spectrogram *spectrogram = new Spectrogram(length);
     float **magnitude = new float *[SPECTROGRAM_WIDTH];
