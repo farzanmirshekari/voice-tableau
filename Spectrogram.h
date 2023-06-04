@@ -4,19 +4,26 @@
 
 #include <fftw3.h>
 
-typedef struct {	
-	int length;
-	fftw_plan plan;
+class Spectrogram {
+	public:
+		Spectrogram(int length);
+		~Spectrogram();
 
-	double* time_domain;
-	double* window;
-	double* frequency_domain;
-	double* magnitude;
+		double get_magnitude();
 
-	double data[];
-} Spectrogram;
+		double * get_magnitude_array();
+		double * get_frequency_domain();
+		double * get_time_domain();
+		double * get_window();
+		double* get_data();
+	private:
+		int length;
+		fftw_plan plan;
+		double* time_domain;
+		double* window;
+		double* frequency_domain;
+		double* magnitude;
+		double data[];
 
-Spectrogram * initialize(int length);
-void destroy(Spectrogram * spectrogram);
-double get_magnitude(Spectrogram * spectrogram);
-void hanning_window(double * data, int data_length);
+		void hanning_window(int data_length);
+};

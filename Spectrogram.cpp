@@ -6,61 +6,72 @@
 #include <math.h>
 #include <limits.h>
 
-inline void hanning_window(double * data, int data_length) {
+void Spectrogram::hanning_window(int data_length) {
 	for (int k = 0; k < data_length; k++) {
-		data[k] = 0.5 * (1.0 - cos(2.0 * M_PI * k / (data_length - 1)));
+		window[k] = 0.5 * (1.0 - cos(2.0 * M_PI * k / (data_length - 1)));
 	}
-	return;
 }
 
-Spectrogram* initialize(int length) {	
-	Spectrogram *spectrogram;
-
-	spectrogram = (Spectrogram *)calloc(1, sizeof (Spectrogram));
-
-	spectrogram->length = length;
-	spectrogram->time_domain = (double *)calloc(2 * length + 1, sizeof (double));
-	spectrogram->window = (double *)calloc(2 * length, sizeof (double));
-	spectrogram->frequency_domain = (double *)calloc(2 * length, sizeof (double));
-	spectrogram->magnitude = (double *)calloc(length + 1, sizeof (double));
-	spectrogram->plan = fftw_plan_r2r_1d(2 * length, spectrogram->time_domain, spectrogram->frequency_domain, FFTW_R2HC, FFTW_MEASURE | FFTW_PRESERVE_INPUT);
-	hanning_window(spectrogram->window, 2 * length);
-
-	return spectrogram;
+Spectrogram::Spectrogram(int length) {	
+	this->length = length;
+	this->time_domain = new double[2 * length + 1];
+	this->window = new double[2 * length];
+	this->frequency_domain = new double[2 * length];
+	this->magnitude = new double[length + 1];
+	this->plan = fftw_plan_r2r_1d(2 * length, this->time_domain, this->frequency_domain, FFTW_R2HC, FFTW_MEASURE | FFTW_PRESERVE_INPUT);
+	hanning_window(this->length * 2);
 }
 
 
-void destroy (Spectrogram * spectrogram) {
-	fftw_destroy_plan(spectrogram->plan);
-	free(spectrogram->time_domain);
-	free(spectrogram->window);
-	free(spectrogram->frequency_domain);
-	free(spectrogram->magnitude);
-	free(spectrogram);
+Spectrogram::~Spectrogram() {
+	fftw_destroy_plan(this->plan);
+	delete[] this->time_domain;
+	delete[] this->window;
+	delete[] this->frequency_domain;
+	delete[] this->magnitude;
 }
 
-double get_magnitude(Spectrogram * spectrogram) {
+double Spectrogram::get_magnitude() {
 	double max;
 	int k, frequency_length;
 
-	frequency_length = 2 * spectrogram->length;
+	frequency_length = 2 * this->length;
 
-	for (k = 0; k < 2 * spectrogram->length; k++) {
-		spectrogram->time_domain[k] *= spectrogram->window[k];
+	for (k = 0; k < 2 * this->length; k++) {
+		this->time_domain[k] *= this->window[k];
 	}
 
-	fftw_execute(spectrogram->plan);
+	fftw_execute(this->plan);
 
-	max = spectrogram->magnitude[0] = fabs(spectrogram->frequency_domain[0]);
+	max = this->magnitude[0] = fabs(this->frequency_domain[0]);
 
-	for (k = 1; k < spectrogram->length; k++) {
-		double re = spectrogram->frequency_domain[k];
-		double image = spectrogram->frequency_domain[frequency_length - k];
-		spectrogram->magnitude[k] = sqrt(re * re + image * image);
-		max = MAX (max, spectrogram->magnitude[k]);
+	for (k = 1; k < this->length; k++) {
+		double re = this->frequency_domain[k];
+		double image = this->frequency_domain[frequency_length - k];
+		this->magnitude[k] = sqrt(re * re + image * image);
+		max = MAX (max, this->magnitude[k]);
 	}
-	spectrogram->magnitude[spectrogram->length] = fabs(spectrogram->frequency_domain[spectrogram->length]);
+	this->magnitude[this->length] = fabs(this->frequency_domain[this->length]);
 
 	return max;
 }
 
+double * Spectrogram::get_magnitude_array() {
+	return this->magnitude;
+}
+
+double * Spectrogram::get_frequency_domain() {
+	return this->frequency_domain;
+}
+
+double * Spectrogram::get_time_domain() {
+	return this->time_domain;
+}
+
+double * Spectrogram::get_window() {
+	return this->window;
+}
+
+double * Spectrogram::get_data() {
+	return this->data;
+}
