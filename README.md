@@ -35,4 +35,10 @@ and run with:
 
 ---
 
+<h3>Saving a tableau</h3>
+
+Pressing the spacebar at any point during the running visualization will take a snapshot of the tableau and save it to your device.
+
+---
+
 <i>Developed by Farzan Mirshekari & Mohammad Hekmat</i>
