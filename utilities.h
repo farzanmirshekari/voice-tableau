@@ -17,7 +17,7 @@ inline constexpr T MIN(const T& x, const T& y) {
     return (x < y) ? x : y;
 }
 
-inline void colour_map (float value, unsigned char colours[3]) {	
+inline void colour_map(float value, unsigned char colours[3]) {	
     static unsigned char map[][3] = {
         { 255, 255, 255 },
         { 255, 104, 123 },
@@ -63,7 +63,7 @@ inline void colour_map (float value, unsigned char colours[3]) {
     colours[2] = round((1.0 - remainder) * map[index][2] + remainder * map[index + 1][2]);
 }
 
-inline double magnitude_to_spectrogram (int length, int magnitude_length, int magnitude_index, double minimum_frequency, double maximum_frequency, int sample_rate) {
+inline double magnitude_to_spectrogram(int length, int magnitude_length, int magnitude_index, double minimum_frequency, double maximum_frequency, int sample_rate) {
     double frequency;
     frequency = minimum_frequency + (maximum_frequency - minimum_frequency) * magnitude_index / (magnitude_length - 1);
     return (frequency * length / (sample_rate / 2));
@@ -82,7 +82,7 @@ inline void map_spectrogram_to_magnitude(float *magnitude, int magnitude_length,
         }
 
         if (next > (current + 1)) {	
-            double count = 1.0 - (current - floor (current));
+            double count = 1.0 - (current - floor(current));
             double sum = spectrogram[(int) current] * count;
 
             while ((current += 1.0) < next && (int) current <= length) {
