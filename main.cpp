@@ -34,8 +34,8 @@ int main() {
     input_parameters.channelCount = 1;
     input_parameters.sampleFormat = paFloat32;
     input_parameters.suggestedLatency = Pa_GetDeviceInfo(input_parameters.device)->defaultLowInputLatency;
-    input_parameters.hostApiSpecificStreamInfo = NULL;
-    err = Pa_OpenStream(&stream, &input_parameters, NULL, SAMPLE_RATE, 1024, paClipOff, NULL, NULL);
+    input_parameters.hostApiSpecificStreamInfo = nullptr;
+    err = Pa_OpenStream(&stream, &input_parameters, nullptr, SAMPLE_RATE, 1024, paClipOff, nullptr, nullptr);
     if (err != paNoError) {
         Pa_Terminate();
         return 1;
@@ -53,14 +53,12 @@ int main() {
 
     int length = SPECTROGRAM_HEIGHT * (SAMPLE_RATE / 20 / SPECTROGRAM_HEIGHT + 1);
     Spectrogram *spectrogram = new Spectrogram(length);
-    float **magnitude = (float **)calloc(SPECTROGRAM_WIDTH, sizeof(float *));
+    float **magnitude = new float *[SPECTROGRAM_WIDTH];
     for (i = 0; i < SPECTROGRAM_WIDTH; ++i) {
-        if ((magnitude[i] = (float *)calloc(SPECTROGRAM_HEIGHT, sizeof(float))) == NULL) {
-            return 1;
-        }
+        magnitude[i] = new float[SPECTROGRAM_HEIGHT];
     }
 
-    float *clip = (float *)calloc(WINDOW_SIZE, sizeof(float));
+    float *clip = new float[WINDOW_SIZE];
     float *clip_fill_in_position = clip + RESERVE_SIZE;
     float *clip_step_in_position = clip + STEP_SIZE;
     Pa_ReadStream(stream, clip, RESERVE_SIZE);
@@ -127,17 +125,17 @@ int main() {
 
     delete spectrogram;
     for (i = 0; i < SPECTROGRAM_WIDTH; ++i) {
-        free(magnitude[i]);
+        delete[] magnitude[i];
     }
-    free(magnitude);
+    delete[] magnitude;
 
     err = Pa_CloseStream(stream);
-    if(err != paNoError) {
+    if (err != paNoError) {
         Pa_Terminate();
         return 1;
     }
 
     Pa_Terminate();
-    free(clip);
+    delete[] clip;
     return 0;
 }
