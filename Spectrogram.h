@@ -11,8 +11,8 @@ class Spectrogram {
 
 		void calculate_magnitude();
 
-		double * get_magnitude_array();
-		double * get_time_domain();
+		double* get_magnitude_array();
+		double* get_time_domain();
 	private:
 		int length;
 		fftw_plan plan;

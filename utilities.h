@@ -49,7 +49,6 @@ inline void colour_map (float value, unsigned char colours[3]) {
     }
 
     value = abs(value * 0.1);
-
     index = round(floor(value));
 
     if (index >= ARRAY_LENGTH(map) - 1) {
