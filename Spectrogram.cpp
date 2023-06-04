@@ -13,7 +13,7 @@ inline void hanning_window(double * data, int data_length) {
 	return;
 }
 
-Spectrogram* initialize(int length ) {	
+Spectrogram* initialize(int length) {	
 	Spectrogram *spectrogram;
 
 	spectrogram = (Spectrogram *)calloc(1, sizeof (Spectrogram));
@@ -56,10 +56,10 @@ double get_magnitude(Spectrogram * spectrogram) {
 	for (k = 1; k < spectrogram->length; k++) {
 		double re = spectrogram->frequency_domain[k];
 		double image = spectrogram->frequency_domain[frequency_length - k];
-		spectrogram->magnitude[k] = sqrt (re * re + image * image);
+		spectrogram->magnitude[k] = sqrt(re * re + image * image);
 		max = MAX (max, spectrogram->magnitude[k]);
 	}
-	spectrogram->magnitude[spectrogram->length] = fabs (spectrogram->frequency_domain[spectrogram->length]);
+	spectrogram->magnitude[spectrogram->length] = fabs(spectrogram->frequency_domain[spectrogram->length]);
 
 	return max;
 }
