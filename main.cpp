@@ -6,6 +6,7 @@
 #include <portaudio.h>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#include <cmath>
 
 int main() {
     PaStreamParameters input_parameters;
@@ -95,12 +96,21 @@ int main() {
             for (int k = 0; k < SPECTROGRAM_HEIGHT; ++k) {
                 magnitude[j][k] /= 100.0;
                 magnitude[j][k] = (magnitude[j][k] < pow(10.0, -180.0 / 20.0)) ? -180.0 : 20.0 * log10(magnitude[j][k]);
-                colour_map(magnitude[j][k], colours);
-                image_data[((SPECTROGRAM_HEIGHT - 1 - k) * image.cols + j) * 3] = colours[2];
-                image_data[((SPECTROGRAM_HEIGHT - 1 - k) * image.cols + j) * 3 + 1] = colours[1];
-                image_data[((SPECTROGRAM_HEIGHT - 1 - k) * image.cols + j) * 3 + 2] = colours[0];
+
+                float radius = (SPECTROGRAM_HEIGHT / 2.0) * (1.0 - k / static_cast<float>(SPECTROGRAM_HEIGHT));
+                float angle = 2.0 * M_PI * j / SPECTROGRAM_WIDTH;
+                int x = SPECTROGRAM_WIDTH / 2 + radius * cos(angle);
+                int y = SPECTROGRAM_HEIGHT / 2 + radius * sin(angle);
+
+                if (x >= 0 && x < SPECTROGRAM_WIDTH && y >= 0 && y < SPECTROGRAM_HEIGHT) {
+                    colour_map(magnitude[j][k], colours);
+                    image_data[(y * image.cols + x) * 3] = colours[2];
+                    image_data[(y * image.cols + x) * 3 + 1] = colours[1];
+                    image_data[(y * image.cols + x) * 3 + 2] = colours[0];
+                }
             }
         }
+
         cv::imshow("Voice Tableau", image);
         unsigned char key = cv::waitKey(10);
         if (key == 27) {
@@ -110,7 +120,6 @@ int main() {
             clip[i] = clip_step_in_position[i];
         }
     }
-
 
     delete spectrogram;
     for (int i = 0; i < SPECTROGRAM_WIDTH; ++i) {
