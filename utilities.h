@@ -101,5 +101,4 @@ inline void map_spectrogram_to_magnitude(float *magnitude, int magnitude_length,
                          + spectrogram[(int) current + 1] * (current - floor(current));
         }
     }
-    return;
 }

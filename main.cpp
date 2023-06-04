@@ -98,8 +98,8 @@ int main() {
         for (int j = 0; j < SPECTROGRAM_WIDTH; ++j) {
             for (int k = 0; k < SPECTROGRAM_HEIGHT; ++k) {
                 magnitude[j][k] /= 100.0;
-                magnitude[j][k] = (magnitude[j][k] < pow(10.0, FLOOR_DECIBELS / 20.0)) ? FLOOR_DECIBELS : 20.0 * log10(magnitude[j][k]);
-                colour_map(magnitude[j][k], FLOOR_DECIBELS, colour);
+                magnitude[j][k] = (magnitude[j][k] < pow(10.0, -180.0 / 20.0)) ? -180.0 : 20.0 * log10(magnitude[j][k]);
+                colour_map(magnitude[j][k], -180.0, colour);
                 image_data[((SPECTROGRAM_HEIGHT - 1 - k) * image.cols + j) * 3] = colour[2];
                 image_data[((SPECTROGRAM_HEIGHT - 1 - k) * image.cols + j) * 3 + 1] = colour[1];
                 image_data[((SPECTROGRAM_HEIGHT - 1 - k) * image.cols + j) * 3 + 2] = colour[0];
