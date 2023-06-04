@@ -9,13 +9,10 @@ class Spectrogram {
 		Spectrogram(int length);
 		~Spectrogram();
 
-		double get_magnitude();
+		void calculate_magnitude();
 
 		double * get_magnitude_array();
-		double * get_frequency_domain();
 		double * get_time_domain();
-		double * get_window();
-		double* get_data();
 	private:
 		int length;
 		fftw_plan plan;
@@ -23,7 +20,6 @@ class Spectrogram {
 		double* window;
 		double* frequency_domain;
 		double* magnitude;
-		double data[];
 
 		void hanning_window(int data_length);
 };

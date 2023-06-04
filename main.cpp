@@ -1,14 +1,9 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#include <fftw3.h>
-#include <portaudio.h>
-
 #include "Spectrogram.h"
 #include "utilities.h"
 #include "constants.h"
 
+#include <fftw3.h>
+#include <portaudio.h>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
@@ -96,7 +91,7 @@ int main() {
                     data[i] = clip[i];
                 }
             }
-            spectrogram->get_magnitude();
+            spectrogram->calculate_magnitude();
             map_spectrogram_to_magnitude(magnitude[j], SPECTROGRAM_HEIGHT, spectrogram->get_magnitude_array(), length, MINIMUM_FREQUENCY, MAXIMUM_FREQUENCY, SAMPLE_RATE);
         }
 

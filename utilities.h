@@ -1,33 +1,43 @@
 #pragma once
 
-#include <math.h>
+#include <cmath>
 
-#define ARRAY_LEN(x) ((int) (sizeof (x) / sizeof (x[0])))
+template<typename T, size_t N>
+inline constexpr size_t ARRAY_LEN(const T (&array)[N]) {
+    return N;
+}
 
-#define MAX(x, y) ((x) > (y) ? (x) : (y))
-#define MIN(x, y) ((x) < (y) ? (x) : (y))
+template<typename T>
+inline constexpr T MAX(const T& x, const T& y) {
+    return (x > y) ? x : y;
+}
+
+template<typename T>
+inline constexpr T MIN(const T& x, const T& y) {
+    return (x < y) ? x : y;
+}
 
 inline void colour_map (float value, double floor_decibels, unsigned char colour[3]) {	
     static unsigned char map[][3] = {
-        {	255,	255,	255	},	/* -0dB */
-        {	240,	254,	216	},	/* -10dB */
-        {	242,	251,	185	},	/* -20dB */
-        {	253,	245,	143	},	/* -30dB */
-        {	253,	200,	102	},	/* -40dB */
-        {	252,	144,	66	},	/* -50dB */
-        {	252,	75,		32	},	/* -60dB */
-        {	237,	28,		41	},	/* -70dB */
-        {	214,	3,		64	},	/* -80dB */
-        {	183,	3,		101	},	/* -90dB */
-        {	157,	3,		122	},	/* -100dB */
-        {	122,	3,		126	},	/* -110dB */
-        {	80,		2,		110	},	/* -120dB */
-        {	45,		2,		89	},	/* -130dB */
-        {	19,		2,		70	},	/* -140dB */
-        {	1,		3,		53	},	/* -150dB */
-        {	1,		3,		37	},	/* -160dB */
-        {	1,		2,		19	},	/* -170dB */
-        {	0,		0,		0	},	/* -180dB */
+        { 255, 255, 255 },
+        { 255, 104, 123 },
+        { 255, 175, 89 },
+        { 255, 232, 59 },
+        { 160, 237, 57 },
+        { 78, 237, 118 },
+        { 57, 207, 237 },
+        { 110, 120, 239 },
+        { 185, 88, 240 },
+        { 220, 60, 200 },
+        { 255, 78, 168 },
+        { 255, 110, 110 },
+        { 255, 160, 128 },
+        { 255, 214, 139 },
+        { 252, 255, 130 },
+        { 217, 255, 106 },
+        { 156, 255, 97 },
+        { 99, 255, 148 },
+        { 137, 137, 137 },
     };
 
     float remainder;
@@ -38,9 +48,9 @@ inline void colour_map (float value, double floor_decibels, unsigned char colour
         return;
     }
 
-    value = fabs(value * (-180.0 / floor_decibels) * 0.1);
+    value = abs(value * (-180.0 / floor_decibels) * 0.1);
 
-    index = lrintf(floor(value));
+    index = round(floor(value));
 
     if (index >= ARRAY_LEN (map) - 1) {	
         colour[0] = colour[1] = colour[2] = 0;
@@ -49,11 +59,9 @@ inline void colour_map (float value, double floor_decibels, unsigned char colour
 
     remainder = fmod(value, 1.0);
 
-    colour[0] = lrintf((1.0 - remainder) * map[index][0] + remainder * map[index + 1][0]);
-    colour[1] = lrintf((1.0 - remainder) * map[index][1] + remainder * map[index + 1][1]);
-    colour[2] = lrintf((1.0 - remainder) * map[index][2] + remainder * map[index + 1][2]);
-
-    return;
+    colour[0] = round((1.0 - remainder) * map[index][0] + remainder * map[index + 1][0]);
+    colour[1] = round((1.0 - remainder) * map[index][1] + remainder * map[index + 1][1]);
+    colour[2] = round((1.0 - remainder) * map[index][2] + remainder * map[index + 1][2]);
 }
 
 inline double magnitude_to_spectrogram (int length, int magnitude_length, int magnitude_index, double minimum_frequency, double maximum_frequency, int sample_rate) {
@@ -62,12 +70,11 @@ inline double magnitude_to_spectrogram (int length, int magnitude_length, int ma
     return (frequency * length / (sample_rate / 2));
 }
 
-inline void map_spectrogram_to_magnitude (float * magnitude, int magnitude_length, const double *spectrogram, int length, const double minimum_frequency, const double maximum_frequency, int sample_rate) {
-    int k;
-    for (k = 0; k < magnitude_length; k++) {
-        double current = magnitude_to_spectrogram (length, magnitude_length, k,
+inline void map_spectrogram_to_magnitude(float *magnitude, int magnitude_length, const double *spectrogram, int length, double const minimum_frequency, double const maximum_frequency, int sample_rate) {
+    for (int k = 0; k < magnitude_length; k++) {
+        double current = magnitude_to_spectrogram(length, magnitude_length, k,
                                                    minimum_frequency, maximum_frequency, sample_rate);
-        double next = magnitude_to_spectrogram (length, magnitude_length, k+1,
+        double next = magnitude_to_spectrogram(length, magnitude_length, k+1,
                                                 minimum_frequency, maximum_frequency, sample_rate);
 
         if (current > length) {	
@@ -83,15 +90,15 @@ inline void map_spectrogram_to_magnitude (float * magnitude, int magnitude_lengt
             	sum += spectrogram[(int) current];
                 count += 1.0;
             }
-            if ((int) next <= length) {
-            	sum += spectrogram[(int) next] * (next - floor (next));
-                count += next - floor (next);
+            if ((int)next <= length) {
+            	sum += spectrogram[(int) next] * (next - floor(next));
+                count += next - floor(next);
             }
             magnitude[k] = sum / count;
         }
         else {	
-            magnitude[k] = spectrogram[(int) current] * (1.0 - (current - floor (current)))
-                         + spectrogram[(int) current + 1] * (current - floor (current));
+            magnitude[k] = spectrogram[(int) current] * (1.0 - (current - floor(current)))
+                         + spectrogram[(int) current + 1] * (current - floor(current));
         }
     }
     return;

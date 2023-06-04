@@ -1,10 +1,6 @@
 #include "Spectrogram.h"
 
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
-#include <math.h>
-#include <limits.h>
+#include <cmath>
 
 void Spectrogram::hanning_window(int data_length) {
 	for (int k = 0; k < data_length; k++) {
@@ -31,8 +27,7 @@ Spectrogram::~Spectrogram() {
 	delete[] this->magnitude;
 }
 
-double Spectrogram::get_magnitude() {
-	double max;
+void Spectrogram::calculate_magnitude() {
 	int k, frequency_length;
 
 	frequency_length = 2 * this->length;
@@ -43,35 +38,18 @@ double Spectrogram::get_magnitude() {
 
 	fftw_execute(this->plan);
 
-	max = this->magnitude[0] = fabs(this->frequency_domain[0]);
-
 	for (k = 1; k < this->length; k++) {
-		double re = this->frequency_domain[k];
-		double image = this->frequency_domain[frequency_length - k];
-		this->magnitude[k] = sqrt(re * re + image * image);
-		max = MAX (max, this->magnitude[k]);
+		double real = this->frequency_domain[k];
+		double imaginary = this->frequency_domain[frequency_length - k];
+		this->magnitude[k] = sqrt(real * real + imaginary * imaginary);
 	}
-	this->magnitude[this->length] = fabs(this->frequency_domain[this->length]);
-
-	return max;
+	this->magnitude[this->length] = abs(this->frequency_domain[this->length]);
 }
 
 double * Spectrogram::get_magnitude_array() {
 	return this->magnitude;
 }
 
-double * Spectrogram::get_frequency_domain() {
-	return this->frequency_domain;
-}
-
 double * Spectrogram::get_time_domain() {
 	return this->time_domain;
-}
-
-double * Spectrogram::get_window() {
-	return this->window;
-}
-
-double * Spectrogram::get_data() {
-	return this->data;
 }
