@@ -3,7 +3,7 @@
 #include <cmath>
 
 template<typename T, size_t N>
-inline constexpr size_t ARRAY_LEN(const T (&array)[N]) {
+inline constexpr size_t ARRAY_LENGTH(const T (&array)[N]) {
     return N;
 }
 
@@ -17,7 +17,7 @@ inline constexpr T MIN(const T& x, const T& y) {
     return (x < y) ? x : y;
 }
 
-inline void colour_map (float value, double floor_decibels, unsigned char colour[3]) {	
+inline void colour_map (float value, unsigned char colours[3]) {	
     static unsigned char map[][3] = {
         { 255, 255, 255 },
         { 255, 104, 123 },
@@ -44,24 +44,24 @@ inline void colour_map (float value, double floor_decibels, unsigned char colour
     int index;
 
     if (value >= 0.0) {	
-        colour[0] = colour[1] = colour[2] = 255;
+        colours[0] = colours[1] = colours[2] = 255;
         return;
     }
 
-    value = abs(value * (-180.0 / floor_decibels) * 0.1);
+    value = abs(value * 0.1);
 
     index = round(floor(value));
 
-    if (index >= ARRAY_LEN (map) - 1) {	
-        colour[0] = colour[1] = colour[2] = 0;
+    if (index >= ARRAY_LENGTH(map) - 1) {
+        colours[0] = colours[1] = colours[2] = 0;
         return;
     }
 
     remainder = fmod(value, 1.0);
 
-    colour[0] = round((1.0 - remainder) * map[index][0] + remainder * map[index + 1][0]);
-    colour[1] = round((1.0 - remainder) * map[index][1] + remainder * map[index + 1][1]);
-    colour[2] = round((1.0 - remainder) * map[index][2] + remainder * map[index + 1][2]);
+    colours[0] = round((1.0 - remainder) * map[index][0] + remainder * map[index + 1][0]);
+    colours[1] = round((1.0 - remainder) * map[index][1] + remainder * map[index + 1][1]);
+    colours[2] = round((1.0 - remainder) * map[index][2] + remainder * map[index + 1][2]);
 }
 
 inline double magnitude_to_spectrogram (int length, int magnitude_length, int magnitude_index, double minimum_frequency, double maximum_frequency, int sample_rate) {
