@@ -26,7 +26,7 @@ The available Makefile is for Mac users (tested and verified on <b>OSX Ventura</
 <br>
 The project can be built with:
 ~~~
-Make
+make
 ~~~
 and run with:
 ~~~
