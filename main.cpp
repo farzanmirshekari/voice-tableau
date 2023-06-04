@@ -13,8 +13,6 @@
 #include <opencv2/highgui/highgui.hpp>
 
 int main() {
-    int i = 0, j = 0, k = 0;
-
     PaStreamParameters input_parameters;
     PaError err;
     PaStream *stream;
@@ -54,7 +52,7 @@ int main() {
     int length = SPECTROGRAM_HEIGHT * (SAMPLE_RATE / 20 / SPECTROGRAM_HEIGHT + 1);
     Spectrogram *spectrogram = new Spectrogram(length);
     float **magnitude = new float *[SPECTROGRAM_WIDTH];
-    for (i = 0; i < SPECTROGRAM_WIDTH; ++i) {
+    for (int i = 0; i < SPECTROGRAM_WIDTH; ++i) {
         magnitude[i] = new float[SPECTROGRAM_HEIGHT];
     }
 
@@ -70,10 +68,10 @@ int main() {
     while (true) {
         Pa_ReadStream(stream, clip_fill_in_position, STEP_SIZE);
 
-        for (j = 0; j < SPECTROGRAM_WIDTH; ++j) {
+        for (int j = 0; j < SPECTROGRAM_WIDTH; ++j) {
             int data_length = 2 * length;
             double *data = spectrogram->get_time_domain();
-            for (i = 0; i < data_length; ++i) {
+            for (int i = 0; i < data_length; ++i) {
                 data[i] = 0.0;
             }
 
@@ -86,7 +84,7 @@ int main() {
                 else {
                     copy_length = data_length;
                 }
-                for (i = 0; i < copy_length; ++i) {
+                for (int i = 0; i < copy_length; ++i) {
                     data[i] = clip[i + start];
                 }
             }
@@ -94,7 +92,7 @@ int main() {
                 start = -start;
                 data += start;
                 data_length -= start;
-                for (i = 0; i < data_length; ++i) {
+                for (int i = 0; i < data_length; ++i) {
                     data[i] = clip[i];
                 }
             }
@@ -102,8 +100,8 @@ int main() {
             map_spectrogram_to_magnitude(magnitude[j], SPECTROGRAM_HEIGHT, spectrogram->get_magnitude_array(), length, MINIMUM_FREQUENCY, MAXIMUM_FREQUENCY, SAMPLE_RATE);
         }
 
-        for (j = 0; j < SPECTROGRAM_WIDTH; ++j) {
-            for (k = 0; k < SPECTROGRAM_HEIGHT; ++k) {
+        for (int j = 0; j < SPECTROGRAM_WIDTH; ++j) {
+            for (int k = 0; k < SPECTROGRAM_HEIGHT; ++k) {
                 magnitude[j][k] /= 100.0;
                 magnitude[j][k] = (magnitude[j][k] < pow(10.0, FLOOR_DECIBELS / 20.0)) ? FLOOR_DECIBELS : 20.0 * log10(magnitude[j][k]);
                 colour_map(magnitude[j][k], FLOOR_DECIBELS, colour);
@@ -117,14 +115,14 @@ int main() {
         if (key == 27) {
             break;
         }
-        for (i = 0; i < RESERVE_SIZE; ++i) {
+        for (int i = 0; i < RESERVE_SIZE; ++i) {
             clip[i] = clip_step_in_position[i];
         }
     }
 
 
     delete spectrogram;
-    for (i = 0; i < SPECTROGRAM_WIDTH; ++i) {
+    for (int i = 0; i < SPECTROGRAM_WIDTH; ++i) {
         delete[] magnitude[i];
     }
     delete[] magnitude;
