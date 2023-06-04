@@ -116,6 +116,13 @@ int main() {
         if (key == 27) {
             break;
         }
+        if (key == 32) {
+            std::time_t currentTime = std::time(nullptr);
+            std::tm* localTime = std::localtime(&currentTime);
+            char filename[100];
+            std::strftime(filename, 100, "snapshot_%Y-%m-%d_%H-%M-%S.png", localTime);
+            cv::imwrite(filename, image);
+        }
         for (int i = 0; i < RESERVE_SIZE; ++i) {
             clip[i] = clip_step_in_position[i];
         }
