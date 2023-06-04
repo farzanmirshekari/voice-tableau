@@ -26,12 +26,18 @@ The available Makefile is for Mac users (tested and verified on <b>OSX Ventura</
 <br>
 The project can be built with:
 ~~~
-Make
+make
 ~~~
 and run with:
 ~~~
 ./voice_tableau
 ~~~
+
+---
+
+<h3>Saving a tableau</h3>
+
+Pressing the spacebar at any point during the running visualization will take a snapshot of the tableau and save it to your device.
 
 ---
 
