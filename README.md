@@ -41,4 +41,12 @@ Pressing the spacebar at any point during the running visualization will take a 
 
 ---
 
+<h3>Sample Tableau</h3>
+
+The following tableau visualizes the beginning of Andante Risoluto from the fourth season of the HBO series Succession.
+
+<img src='assets/andante_risoluto.png' width=500 />
+
+---
+
 <i>Developed by Farzan Mirshekari & Mohammad Hekmat</i>
