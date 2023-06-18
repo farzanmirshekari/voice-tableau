@@ -1,6 +1,5 @@
 #include "Spectrogram.h"
 #include "utilities.h"
-#include "constants.h"
 
 #include <fftw3.h>
 #include <portaudio.h>
