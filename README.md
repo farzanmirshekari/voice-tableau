@@ -41,7 +41,7 @@ Pressing the spacebar at any point during the running visualization will take a 
 
 ---
 
-<h3>Sample Tableau</h3>
+<h3>Sample tableau</h3>
 
 The following tableau visualizes the beginning of _Andante Risoluto_ from the fourth season of the _HBO_ series _Succession_.
 
