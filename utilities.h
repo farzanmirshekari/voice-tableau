@@ -8,18 +8,6 @@ inline constexpr size_t ARRAY_LENGTH(const T (&array)[N])
     return N;
 }
 
-template<typename T>
-inline constexpr T MAX(const T& x, const T& y) 
-{
-    return (x > y) ? x : y;
-}
-
-template<typename T>
-inline constexpr T MIN(const T& x, const T& y) 
-{
-    return (x < y) ? x : y;
-}
-
 const double SAMPLE_RATE = 16000;
 const double MINIMUM_FREQUENCY = 0.0;
 const double MAXIMUM_FREQUENCY = SAMPLE_RATE / 2.0;
