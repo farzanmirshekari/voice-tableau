@@ -63,6 +63,8 @@ int main()
     unsigned char *image_data = image.data;
     unsigned char colours[3] = {0, 0, 0};
 
+    const double spectrogram_radius = 0.95 * (SPECTROGRAM_HEIGHT / 2.0);
+
     while (true) 
     {
         Pa_ReadStream(stream, clip_fill_in_position, STEP_SIZE);
@@ -121,9 +123,11 @@ int main()
 
                 if (x >= 0 && x < SPECTROGRAM_WIDTH && y >= 0 && y < SPECTROGRAM_HEIGHT) 
                 {
+                    double distance = sqrt(pow(x - SPECTROGRAM_WIDTH / 2, 2) + pow(y - SPECTROGRAM_HEIGHT / 2, 2));
+                    int pixel_radius = distance < spectrogram_radius / 2.5 ? 1 : 4;
                     colour_map(magnitude[j][k], colours);
                     cv::Point point(x, y);
-                    cv::circle(image, point, 4, cv::Scalar(colours[2], colours[1], colours[0]));
+                    cv::circle(image, point, pixel_radius, cv::Scalar(colours[2], colours[1], colours[0]));
                 }
             }
         }
