@@ -67,18 +67,18 @@ inline void map_colours(float value, unsigned char * colours)
     }
 }
 
-inline double magnitude_to_spectrogram(int length, int magnitude_length, int magnitude_index)
+inline double magnitude_to_spectrogram(int length, int magnitude_index)
 {
-    double frequency = MINIMUM_FREQUENCY + (MAXIMUM_FREQUENCY - MINIMUM_FREQUENCY) * magnitude_index / (magnitude_length - 1);
+    double frequency = MINIMUM_FREQUENCY + (MAXIMUM_FREQUENCY - MINIMUM_FREQUENCY) * magnitude_index / (SPECTROGRAM_HEIGHT - 1);
     return (frequency * length / (SAMPLE_RATE / 2));
 }
 
-inline void map_spectrogram_to_magnitude(float *magnitude, int magnitude_length, const double *spectrogram, int length) 
+inline void map_spectrogram_to_magnitude(float *magnitude, const double *spectrogram, int length) 
 {
-    for (int k = 0; k < magnitude_length; k++) 
+    for (int k = 0; k < SPECTROGRAM_HEIGHT; ++k) 
     {
-        double current = magnitude_to_spectrogram(length, magnitude_length, k);
-        double next = magnitude_to_spectrogram(length, magnitude_length, k+1);
+        double current = magnitude_to_spectrogram(length, k);
+        double next = magnitude_to_spectrogram(length, k+1);
 
         if (current > length) 
         {	

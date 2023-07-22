@@ -106,7 +106,7 @@ int main()
                 }
             }
             spectrogram->calculate_magnitude();
-            map_spectrogram_to_magnitude(magnitude[j], SPECTROGRAM_HEIGHT, spectrogram->get_magnitude_array(), length);
+            map_spectrogram_to_magnitude(magnitude[j], spectrogram->get_magnitude_array(), length);
         }
 
         for (int j = 0; j < SPECTROGRAM_WIDTH; ++j) 

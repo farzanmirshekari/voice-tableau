@@ -25,7 +25,7 @@ Spectrogram::~Spectrogram()
 
 void Spectrogram::hanning_window(int data_length) 
 {
-	for (int k = 0; k < data_length; k++) 
+	for (int k = 0; k < data_length; ++k) 
 	{
 		window[k] = 0.5 * (1.0 - cos(2.0 * M_PI * k / (data_length - 1)));
 	}
@@ -35,14 +35,14 @@ void Spectrogram::calculate_magnitude()
 {
 	int frequency_length = 2 * this->length;
 
-	for (int k = 0; k < 2 * this->length; k++) 
+	for (int k = 0; k < 2 * this->length; ++k) 
 	{
 		this->time_domain[k] *= this->window[k];
 	}
 
 	fftw_execute(this->plan);
 
-	for (int k = 1; k < this->length; k++) 
+	for (int k = 1; k < this->length; ++k) 
 	{
 		double real = this->frequency_domain[k];
 		double imaginary = this->frequency_domain[frequency_length - k];
