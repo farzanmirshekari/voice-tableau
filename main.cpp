@@ -60,7 +60,6 @@ int main()
     Pa_ReadStream(stream, clip, RESERVE_SIZE);
 
     cv::Mat image(SPECTROGRAM_HEIGHT, SPECTROGRAM_WIDTH, CV_8UC3);
-    unsigned char *image_data = image.data;
     unsigned char colours[3] = {0, 0, 0};
 
     const double spectrogram_radius = 0.95 * (SPECTROGRAM_HEIGHT / 2.0);
