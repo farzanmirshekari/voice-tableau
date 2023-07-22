@@ -106,7 +106,7 @@ int main()
                 }
             }
             spectrogram->calculate_magnitude();
-            map_spectrogram_to_magnitude(magnitude[j], SPECTROGRAM_HEIGHT, spectrogram->get_magnitude_array(), length, MINIMUM_FREQUENCY, MAXIMUM_FREQUENCY, SAMPLE_RATE);
+            map_spectrogram_to_magnitude(magnitude[j], SPECTROGRAM_HEIGHT, spectrogram->get_magnitude_array(), length);
         }
 
         for (int j = 0; j < SPECTROGRAM_WIDTH; ++j) 
@@ -114,10 +114,12 @@ int main()
             for (int k = 0; k < SPECTROGRAM_HEIGHT; ++k) 
             {
                 magnitude[j][k] /= 100.0;
-                magnitude[j][k] = (magnitude[j][k] < pow(10.0, -180.0 / 20.0)) ? -180.0 : 20.0 * log10(magnitude[j][k]);
+                magnitude[j][k] = (magnitude[j][k] < pow(10.0, -180.0 / 20.0)) ? 
+                    -180.0 : 
+                    20.0 * log10(magnitude[j][k]);
 
-                float radius = 0.95 * (SPECTROGRAM_HEIGHT / 2.0) * (1.0 - k / static_cast<float>(SPECTROGRAM_HEIGHT));
-                float angle = 2.0 * M_PI * j / SPECTROGRAM_WIDTH;
+                double radius = 0.95 * (SPECTROGRAM_HEIGHT / 2.0) * (1.0 - k / static_cast<double>(SPECTROGRAM_HEIGHT));
+                double angle = 2.0 * M_PI * j / SPECTROGRAM_WIDTH;
                 int x = SPECTROGRAM_WIDTH / 2 + radius * cos(angle);
                 int y = SPECTROGRAM_HEIGHT / 2 + radius * sin(angle);
 

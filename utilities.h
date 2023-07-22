@@ -53,48 +53,44 @@ static const unsigned char colour_map[][3] = {
     { 137, 137, 137 },
 };
 
-inline void map_colours(float value, unsigned char colours[3]) 
-{	
-    float remainder;
-    int index;
-
-    if (value >= 0.0) 
-    {	
+inline void map_colours(float value, unsigned char * colours)
+{
+    if (value >= 0.0)
+    {
         colours[0] = colours[1] = colours[2] = 255;
         return;
     }
 
-    value = abs(value * 0.1);
-    index = round(floor(value));
+    value = std::abs(value * 0.1);
 
-    if (index >= ARRAY_LENGTH(colour_map) - 1) 
+    int index = static_cast<int>(std::floor(value));
+    if (index >= ARRAY_LENGTH(colour_map) - 1)
     {
         colours[0] = colours[1] = colours[2] = 0;
         return;
     }
 
-    remainder = fmod(value, 1.0);
-
-    colours[0] = round((1.0 - remainder) * colour_map[index][0] + remainder * colour_map[index + 1][0]);
-    colours[1] = round((1.0 - remainder) * colour_map[index][1] + remainder * colour_map[index + 1][1]);
-    colours[2] = round((1.0 - remainder) * colour_map[index][2] + remainder * colour_map[index + 1][2]);
+    float remainder = value - index;
+    for (int i = 0; i < 3; ++i)
+    {
+        colours[i] = static_cast<unsigned char>(
+            (1.0f - remainder) * colour_map[index][i] + remainder * colour_map[index + 1][i]
+        );
+    }
 }
 
-inline double magnitude_to_spectrogram(int length, int magnitude_length, int magnitude_index, double minimum_frequency, double maximum_frequency, int sample_rate) 
+inline double magnitude_to_spectrogram(int length, int magnitude_length, int magnitude_index)
 {
-    double frequency;
-    frequency = minimum_frequency + (maximum_frequency - minimum_frequency) * magnitude_index / (magnitude_length - 1);
-    return (frequency * length / (sample_rate / 2));
+    double frequency = MINIMUM_FREQUENCY + (MAXIMUM_FREQUENCY - MINIMUM_FREQUENCY) * magnitude_index / (magnitude_length - 1);
+    return (frequency * length / (SAMPLE_RATE / 2));
 }
 
-inline void map_spectrogram_to_magnitude(float *magnitude, int magnitude_length, const double *spectrogram, int length, double const minimum_frequency, double const maximum_frequency, int sample_rate) 
+inline void map_spectrogram_to_magnitude(float *magnitude, int magnitude_length, const double *spectrogram, int length) 
 {
     for (int k = 0; k < magnitude_length; k++) 
     {
-        double current = magnitude_to_spectrogram(length, magnitude_length, k,
-                                                   minimum_frequency, maximum_frequency, sample_rate);
-        double next = magnitude_to_spectrogram(length, magnitude_length, k+1,
-                                                minimum_frequency, maximum_frequency, sample_rate);
+        double current = magnitude_to_spectrogram(length, magnitude_length, k);
+        double next = magnitude_to_spectrogram(length, magnitude_length, k+1);
 
         if (current > length) 
         {	
