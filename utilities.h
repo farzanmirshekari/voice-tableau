@@ -14,22 +14,27 @@ const int SPECTROGRAM_HEIGHT = 768;
 const int SPECTROGRAM_WIDTH = SPECTROGRAM_HEIGHT;
 
 template<typename T, size_t N>
-inline constexpr size_t ARRAY_LENGTH(const T (&array)[N]) {
+inline constexpr size_t ARRAY_LENGTH(const T (&array)[N]) 
+{
     return N;
 }
 
 template<typename T>
-inline constexpr T MAX(const T& x, const T& y) {
+inline constexpr T MAX(const T& x, const T& y) 
+{
     return (x > y) ? x : y;
 }
 
 template<typename T>
-inline constexpr T MIN(const T& x, const T& y) {
+inline constexpr T MIN(const T& x, const T& y) 
+{
     return (x < y) ? x : y;
 }
 
-inline void colour_map(float value, unsigned char colours[3]) {	
-    static unsigned char map[][3] = {
+inline void colour_map(float value, unsigned char colours[3]) 
+{	
+    static unsigned char map[][3] = 
+    {
         { 255, 255, 255 },
         { 255, 104, 123 },
         { 255, 175, 89 },
@@ -54,7 +59,8 @@ inline void colour_map(float value, unsigned char colours[3]) {
     float remainder;
     int index;
 
-    if (value >= 0.0) {	
+    if (value >= 0.0) 
+    {	
         colours[0] = colours[1] = colours[2] = 255;
         return;
     }
@@ -62,7 +68,8 @@ inline void colour_map(float value, unsigned char colours[3]) {
     value = abs(value * 0.1);
     index = round(floor(value));
 
-    if (index >= ARRAY_LENGTH(map) - 1) {
+    if (index >= ARRAY_LENGTH(map) - 1) 
+    {
         colours[0] = colours[1] = colours[2] = 0;
         return;
     }
@@ -74,39 +81,47 @@ inline void colour_map(float value, unsigned char colours[3]) {
     colours[2] = round((1.0 - remainder) * map[index][2] + remainder * map[index + 1][2]);
 }
 
-inline double magnitude_to_spectrogram(int length, int magnitude_length, int magnitude_index, double minimum_frequency, double maximum_frequency, int sample_rate) {
+inline double magnitude_to_spectrogram(int length, int magnitude_length, int magnitude_index, double minimum_frequency, double maximum_frequency, int sample_rate) 
+{
     double frequency;
     frequency = minimum_frequency + (maximum_frequency - minimum_frequency) * magnitude_index / (magnitude_length - 1);
     return (frequency * length / (sample_rate / 2));
 }
 
-inline void map_spectrogram_to_magnitude(float *magnitude, int magnitude_length, const double *spectrogram, int length, double const minimum_frequency, double const maximum_frequency, int sample_rate) {
-    for (int k = 0; k < magnitude_length; k++) {
+inline void map_spectrogram_to_magnitude(float *magnitude, int magnitude_length, const double *spectrogram, int length, double const minimum_frequency, double const maximum_frequency, int sample_rate) 
+{
+    for (int k = 0; k < magnitude_length; k++) 
+    {
         double current = magnitude_to_spectrogram(length, magnitude_length, k,
                                                    minimum_frequency, maximum_frequency, sample_rate);
         double next = magnitude_to_spectrogram(length, magnitude_length, k+1,
                                                 minimum_frequency, maximum_frequency, sample_rate);
 
-        if (current > length) {	
+        if (current > length) 
+        {	
             magnitude[k] = 0.0;
             return;
         }
 
-        if (next > (current + 1)) {	
+        if (next > (current + 1)) 
+        {	
             double count = 1.0 - (current - floor(current));
             double sum = spectrogram[(int) current] * count;
 
-            while ((current += 1.0) < next && (int) current <= length) {
+            while ((current += 1.0) < next && (int) current <= length) 
+            {
             	sum += spectrogram[(int) current];
                 count += 1.0;
             }
-            if ((int)next <= length) {
+            if ((int)next <= length) 
+            {
             	sum += spectrogram[(int) next] * (next - floor(next));
                 count += next - floor(next);
             }
             magnitude[k] = sum / count;
         }
-        else {	
+        else 
+        {	
             magnitude[k] = spectrogram[(int) current] * (1.0 - (current - floor(current)))
                          + spectrogram[(int) current + 1] * (current - floor(current));
         }

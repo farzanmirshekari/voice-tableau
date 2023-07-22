@@ -7,19 +7,22 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <cmath>
 
-int main() {
+int main() 
+{
     PaStreamParameters input_parameters;
     PaError err;
     PaStream *stream;
 
     err = Pa_Initialize();
-    if (err != paNoError) {
+    if (err != paNoError) 
+    {
         Pa_Terminate();
         return 1;
     }
 
     input_parameters.device = Pa_GetDefaultInputDevice();
-    if (input_parameters.device == paNoDevice) {
+    if (input_parameters.device == paNoDevice) 
+    {
         Pa_Terminate();
         return 1;
     }
@@ -29,13 +32,15 @@ int main() {
     input_parameters.suggestedLatency = Pa_GetDeviceInfo(input_parameters.device)->defaultLowInputLatency;
     input_parameters.hostApiSpecificStreamInfo = nullptr;
     err = Pa_OpenStream(&stream, &input_parameters, nullptr, SAMPLE_RATE, 1024, paClipOff, nullptr, nullptr);
-    if (err != paNoError) {
+    if (err != paNoError) 
+    {
         Pa_Terminate();
         return 1;
     }
 
     err = Pa_StartStream(stream);
-    if (err != paNoError) {
+    if (err != paNoError) 
+    {
         Pa_Terminate();
         return 1;
     }
@@ -43,7 +48,8 @@ int main() {
     int length = SPECTROGRAM_HEIGHT * (SAMPLE_RATE / 20 / SPECTROGRAM_HEIGHT + 1);
     Spectrogram *spectrogram = new Spectrogram(length);
     float **magnitude = new float *[SPECTROGRAM_WIDTH];
-    for (int i = 0; i < SPECTROGRAM_WIDTH; ++i) {
+    for (int i = 0; i < SPECTROGRAM_WIDTH; ++i) 
+    {
         magnitude[i] = new float[SPECTROGRAM_HEIGHT];
     }
 
@@ -56,34 +62,43 @@ int main() {
     unsigned char *image_data = image.data;
     unsigned char colours[3] = {0, 0, 0};
 
-    while (true) {
+    while (true) 
+    {
         Pa_ReadStream(stream, clip_fill_in_position, STEP_SIZE);
 
-        for (int j = 0; j < SPECTROGRAM_WIDTH; ++j) {
+        for (int j = 0; j < SPECTROGRAM_WIDTH; ++j) 
+        {
             int data_length = 2 * length;
             double *data = spectrogram->get_time_domain();
-            for (int i = 0; i < data_length; ++i) {
+            for (int i = 0; i < data_length; ++i) 
+            {
                 data[i] = 0.0;
             }
 
             int start = (j * WINDOW_SIZE) / SPECTROGRAM_WIDTH - length;
-            if (start >= 0) {
+            if (start >= 0) 
+            {
                 int copy_length = 0;
-                if (start + data_length > WINDOW_SIZE) {
+                if (start + data_length > WINDOW_SIZE) 
+                {
                     copy_length = WINDOW_SIZE - start;
                 }
-                else {
+                else 
+                {
                     copy_length = data_length;
                 }
-                for (int i = 0; i < copy_length; ++i) {
+                for (int i = 0; i < copy_length; ++i) 
+                {
                     data[i] = clip[i + start];
                 }
             }
-            else {
+            else 
+            {
                 start = -start;
                 data += start;
                 data_length -= start;
-                for (int i = 0; i < data_length; ++i) {
+                for (int i = 0; i < data_length; ++i) 
+                {
                     data[i] = clip[i];
                 }
             }
@@ -91,8 +106,10 @@ int main() {
             map_spectrogram_to_magnitude(magnitude[j], SPECTROGRAM_HEIGHT, spectrogram->get_magnitude_array(), length, MINIMUM_FREQUENCY, MAXIMUM_FREQUENCY, SAMPLE_RATE);
         }
 
-        for (int j = 0; j < SPECTROGRAM_WIDTH; ++j) {
-            for (int k = 0; k < SPECTROGRAM_HEIGHT; ++k) {
+        for (int j = 0; j < SPECTROGRAM_WIDTH; ++j) 
+        {
+            for (int k = 0; k < SPECTROGRAM_HEIGHT; ++k) 
+            {
                 magnitude[j][k] /= 100.0;
                 magnitude[j][k] = (magnitude[j][k] < pow(10.0, -180.0 / 20.0)) ? -180.0 : 20.0 * log10(magnitude[j][k]);
 
@@ -112,29 +129,34 @@ int main() {
 
         cv::imshow("Voice Tableau", image);
         unsigned char key = cv::waitKey(10);
-        if (key == 32) {
+        if (key == 32) 
+        {
             std::time_t currentTime = std::time(nullptr);
             std::tm* localTime = std::localtime(&currentTime);
             char filename[100];
             std::strftime(filename, 100, "snapshot_%Y-%m-%d_%H-%M-%S.png", localTime);
             cv::imwrite(filename, image);
         }
-        if (key == 27) {
+        if (key == 27) 
+        {
             break;
         }
-        for (int i = 0; i < RESERVE_SIZE; ++i) {
+        for (int i = 0; i < RESERVE_SIZE; ++i) 
+        {
             clip[i] = clip_step_in_position[i];
         }
     }
 
     delete spectrogram;
-    for (int i = 0; i < SPECTROGRAM_WIDTH; ++i) {
+    for (int i = 0; i < SPECTROGRAM_WIDTH; ++i) 
+    {
         delete[] magnitude[i];
     }
     delete[] magnitude;
 
     err = Pa_CloseStream(stream);
-    if (err != paNoError) {
+    if (err != paNoError) 
+    {
         Pa_Terminate();
         return 1;
     }

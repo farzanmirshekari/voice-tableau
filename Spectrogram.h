@@ -4,7 +4,8 @@
 
 #include <fftw3.h>
 
-class Spectrogram {
+class Spectrogram 
+{
 	public:
 		Spectrogram(int length);
 		~Spectrogram();
