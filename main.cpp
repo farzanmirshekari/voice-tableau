@@ -125,7 +125,7 @@ int main()
                 {
                     double distance = sqrt(pow(x - SPECTROGRAM_WIDTH / 2, 2) + pow(y - SPECTROGRAM_HEIGHT / 2, 2));
                     int pixel_radius = distance < spectrogram_radius / 2.5 ? 1 : 4;
-                    colour_map(magnitude[j][k], colours);
+                    map_colours(magnitude[j][k], colours);
                     cv::Point point(x, y);
                     cv::circle(image, point, pixel_radius, cv::Scalar(colours[2], colours[1], colours[0]));
                 }
