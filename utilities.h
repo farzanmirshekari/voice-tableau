@@ -2,11 +2,7 @@
 
 #include <cmath>
 
-template<typename T, size_t N>
-inline constexpr size_t ARRAY_LENGTH(const T (&array)[N]) 
-{
-    return N;
-}
+#define ARRAY_LENGTH(array) (sizeof(array) / sizeof((array)[0]))
 
 const double SAMPLE_RATE = 16000;
 const double MINIMUM_FREQUENCY = 0.0;
@@ -96,7 +92,7 @@ inline void map_spectrogram_to_magnitude(float *magnitude, const double *spectro
             	sum += spectrogram[(int) current];
                 count += 1.0;
             }
-            if ((int)next <= length) 
+            if ((int) next <= length) 
             {
             	sum += spectrogram[(int) next] * (next - floor(next));
                 count += next - floor(next);
