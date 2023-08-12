@@ -10,7 +10,7 @@ LIBS = -L/opt/homebrew/Cellar/opencv/4.7.0_4/lib/ \
        -lopencv_core -lopencv_highgui -lopencv_imgproc -lopencv_imgcodecs \
 	   -lportaudio -lfftw3
 
-OBJS = main.o Spectrogram.o
+OBJS = main.o utilities.o Spectrogram.o
 
 all: voice_tableau
 
