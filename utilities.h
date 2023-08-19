@@ -38,5 +38,4 @@ static const unsigned char colour_map[][3] = {
 };
 
 void map_colours(float value, unsigned char * colours);
-double magnitude_to_spectrogram(int length, int magnitude_index);
 void map_spectrogram_to_magnitude(float *magnitude, const double *spectrogram, int length);
