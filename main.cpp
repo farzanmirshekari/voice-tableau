@@ -58,7 +58,6 @@ int main()
     float* clip = new float[WINDOW_SIZE];
     float* clip_fill_in_position = clip + RESERVE_SIZE;
     float* clip_step_in_position = clip + STEP_SIZE;
-    Pa_ReadStream(stream, clip, RESERVE_SIZE);
 
     cv::Mat image(SPECTROGRAM_HEIGHT, SPECTROGRAM_WIDTH, CV_8UC3);
     unsigned char colours[3] = {0, 0, 0};
