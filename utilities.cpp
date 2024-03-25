@@ -20,9 +20,7 @@ void map_colours(float value, unsigned char * colours)
     float remainder = value - index;
     for (int i = 0; i < 3; ++i)
     {
-        colours[i] = static_cast<unsigned char>(
-            (1.0f - remainder) * colour_map[index][i] + remainder * colour_map[index + 1][i]
-        );
+        colours[i] = static_cast<unsigned char>((1.0f - remainder) * colour_map[index][i] + remainder * colour_map[index + 1][i]);
     }
 }
 
@@ -64,7 +62,7 @@ void map_spectrogram_to_magnitude(float *magnitude, const double *spectrogram, i
         else 
         {	
             magnitude[k] = spectrogram[(int) current] * (1.0 - (current - floor(current)))
-                         + spectrogram[(int) current + 1] * (current - floor(current));
+                           + spectrogram[(int) current + 1] * (current - floor(current));
         }
     }
 }

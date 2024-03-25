@@ -2,10 +2,11 @@
 #include "utilities.h"
 
 #include <fftw3.h>
-#include <portaudio.h>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <portaudio.h>
+
 #include <cmath>
 
 int main() 
@@ -18,14 +19,14 @@ int main()
     if (error != paNoError) 
     {
         Pa_Terminate();
-        return 1;
+        return -1;
     }
 
     input_parameters.device = Pa_GetDefaultInputDevice();
     if (input_parameters.device == paNoDevice) 
     {
         Pa_Terminate();
-        return 1;
+        return -1;
     }
 
     input_parameters.channelCount = 1;
@@ -36,14 +37,14 @@ int main()
     if (error != paNoError) 
     {
         Pa_Terminate();
-        return 1;
+        return -1;
     }
 
     error = Pa_StartStream(stream);
     if (error != paNoError) 
     {
         Pa_Terminate();
-        return 1;
+        return -1;
     }
 
     int length = SPECTROGRAM_HEIGHT * (SAMPLE_RATE / 20 / SPECTROGRAM_HEIGHT + 1);
@@ -161,7 +162,7 @@ int main()
     if (error != paNoError) 
     {
         Pa_Terminate();
-        return 1;
+        return -1;
     }
 
     Pa_Terminate();

@@ -15,6 +15,8 @@ class Spectrogram
 		double* get_magnitude_array();
 		double* get_time_domain();
 	private:
+		void hanning_window(int data_length);
+		
 		int length;
 		fftw_plan plan;
 		double* time_domain;
@@ -22,5 +24,4 @@ class Spectrogram
 		double* frequency_domain;
 		double* magnitude;
 
-		void hanning_window(int data_length);
 };
