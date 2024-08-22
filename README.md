@@ -1,7 +1,7 @@
 <h1>Voice Tableau</h1>
 
 _**Voice Tableau**_ is a real-time sound spectrogram visualizer, leveraging _PortAudio_ to capture input audio from the device microhphone, _FFTW3_ to perform Fast Fourier Transform on the data stream and _OpenCV_ to visualize the results. Instead of the traditional rectangular visualization, _**Voice Tableau**_
-creates an aesthetic circular representation of the input audio.
+creates an circular rolling representation of the input audio; kind of like a radar!
 
 ---
 
