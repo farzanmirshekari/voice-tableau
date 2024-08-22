@@ -7,7 +7,7 @@ creates an circular rolling representation of the input audio, kind of like a ra
 
 <h3>Origins</h3>
 
-_**Voice Tableau**_ is a product of the mind of Mohammad Hekmat - my uncle - who was inspired by the works of Mexican-Canadian artist Rafael Lozano-Hemmer.
+_**Voice Tableau**_ is a product of the mind of Mohammad Hekmat - my uncle - who was inspired by the works of Mexican-Canadian artist Rafael Lozano-Hemmer, the work of whom can be seen <a href="https://www.lozano-hemmer.com">here</a>.
 
 ---
 
